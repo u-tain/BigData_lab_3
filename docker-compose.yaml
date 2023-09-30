@@ -1,0 +1,50 @@
+version: '3.10'
+
+services:
+  database:
+    container_name: database
+    image:  bitnami/clickhouse:latest
+    ports:
+      - "8123:8123"
+    networks:
+      customnetwork:
+        ipv4_address: 172.25.0.2
+    ulimits:
+      nofile: 262144
+    environment:
+      CLICKHOUSE_DB: default
+      CLICKHOUSE_USER:  utain 
+      CLICKHOUSE_PASSWORD: 3244
+      DEFAULT_SESSION_TIMEOUT: 120
+    volumes:
+      - ./database/config.xml:/etc/config.xml
+    # healthcheck:
+    #   test: curl -f https://172.25.0.2:8123 || exit 1
+    #   interval: 1m30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 40s
+
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    networks:
+      - customnetwork
+    environment:
+      - DB_USER=utain
+      - DB_HOST=172.25.0.2
+      - DB_PASS=3244
+    volumes:
+      - .:/app
+    depends_on:
+      - database
+        # condition: service_healthy
+
+networks:
+  customnetwork:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
