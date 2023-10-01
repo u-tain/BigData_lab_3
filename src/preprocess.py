@@ -95,18 +95,25 @@ class DataPreprocess():
         else: 
             columns = df.columns
         num_columns = len(columns)
-        columns = [f'"{item}" FLOAT' for item in columns]
+        columns = [f'`{item}` FLOAT' for item in columns]
         columns = str(columns).replace('[','').replace(']','').replace("'","")
-        text_query = f'CREATE TABLE  IF NOT EXISTS {name}  ({columns}) ENGINE = Log'
+        print(name)
+        text_query = f'CREATE TABLE  IF NOT EXISTS {name}  ({columns}) ENGINE = MergeTree ORDER BY tuple()'
         delete_query = f'DROP TABLE {name};'
         if self.client.query(f'EXISTS TABLE {name}').result_rows[0][0] == 1:
+            print('delete')
             self.client.query(delete_query)
         self.client.query(text_query)
-        if len(df) == 1490:
-            for i in range(2):
-                rows = df.iloc[(1490//2)*i:(i+1)*(1490//2)].values.tolist() 
+        print(len(df))
+        batch_size = 6
+        for i in range(batch_size):
+            if i!=batch_size-1:
+                rows = df.iloc[(len(df)//batch_size)*i:(i+1)*(len(df)//batch_size)].values.tolist() 
+            else: 
+                rows = df.iloc[(len(df)//batch_size)*i:].values.tolist() 
             rows = str(rows)[1:-1].replace('[','(').replace(']',')').replace('\n','')
             insert_query = f'INSERT INTO {name}  VALUES {rows} '
+            self.client.query(insert_query )
         return num_columns
 
 

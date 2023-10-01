@@ -14,4 +14,8 @@ Max retries exceeded with url: /?wait_end_of_query=1
 (Caused by ConnectTimeoutError(<urllib3.connection.HTTPConnection object at 0x7fcf31a7a710>, 
 'Connection to 172.25.0.2 timed out. (connect timeout=10)')
 ```
+5. Был изменен докер образ clickhouse и ошибка ушла
+6. Исправлен  CI/CD пайплайн
+
+![image](https://github.com/u-tain/BigData_lab_2/assets/43996253/9a5732b7-05af-4d0f-8c7c-868787c01e14)
 

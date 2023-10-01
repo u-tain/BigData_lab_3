@@ -16,6 +16,7 @@ class Predictor():
         self.client = connect2bd()
 
         query= self.client.query(f"SELECT * FROM {self.config['READY_DATA_TEST']['X_test']}")
+        print(query.summary)
         df  = pd.DataFrame(columns= np.arange(int(self.config['READY_DATA_TEST']['x_test_columns'])),)
         for item in query.result_rows:
             df.loc[len(df)] = item
@@ -43,9 +44,11 @@ class Predictor():
         logging.info('Predictions fulfilled')
         Y_pred = self.post_process(Y_pred)
         logging.info('Predictions post-processed')
+        print(len(self.test_df_before_prepoc["ArticleId"]))
+        print(len(Y_pred))
         results = pd.DataFrame({
             "ArticleId": self.test_df_before_prepoc["ArticleId"],
-            "Category": Y_pred
+            "Category": Y_pred[:len(self.test_df_before_prepoc["ArticleId"])]
         })
         self.config['RESULT'] = {'path': self.result_path}
         with open('src/config.ini', 'w') as configfile:

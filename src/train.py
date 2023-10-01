@@ -7,6 +7,7 @@ import configparser
 import logging
 from bd_utils import connect2bd
 import traceback
+import time
 
 
 
@@ -22,12 +23,19 @@ class Model():
         self.client = connect2bd()
 
         query1= self.client.query(f"SELECT * FROM {self.config['READY_DATA_TRAIN']['x_train']}")
+        print(query1)
+        print(query1.summary)
+        time.sleep(1)
         query2= self.client.query(f"SELECT * FROM {self.config['READY_DATA_TRAIN']['y_train']}")
         df1  = pd.DataFrame(columns= np.arange(int(self.config['READY_DATA_TRAIN']['x_train_columns'])),)
         df2 = pd.DataFrame(columns = ['Category'])
         rows1 = query1.result_rows
         rows2 = query2.result_rows
-        for i in range(len(rows1)):
+        print(len(rows1))
+        print(len(rows2))
+        print(len(df1))
+        print(len(df2))
+        for i in range(len(rows2)):
             df1.loc[len(df1)] = rows1[i]
             df2.loc[len(df2)] = rows2[i]
 
@@ -42,6 +50,7 @@ class Model():
         classifier = LogisticRegression(penalty='l2', C=1.0, max_iter=100, random_state=0)
         logging.info('the model has been initialized')
         try:
+            print(len(self.X_train))
             classifier.fit(self.X_train, self.y_train)
             classifier_dtb = classifier.predict(self.X_train)
         except Exception:

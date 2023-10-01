@@ -20,6 +20,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASS }}
       -
         name: Build docker
+        shell: bash
         run: docker-compose build
       -
         name: Start docker
