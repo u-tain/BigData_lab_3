@@ -7,7 +7,13 @@ on:
 
 jobs:     
   build:
-    runs-on: ubuntu-latest      
+    runs-on: ubuntu-latest  
+    env:
+       user: ${{ secrets.DB_USER }}
+       pass: ${{ secrets.DB_PASS }}
+       name_db: ${{ secrets.DB_NAME }}
+       ip_db: ${{ secrets.DB_IP }}
+       ip_net: ${{ secrets.NET_IP }}
     steps:
       -
         name: Checkout
