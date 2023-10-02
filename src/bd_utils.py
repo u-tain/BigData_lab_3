@@ -1,16 +1,16 @@
 import clickhouse_connect
 import os,sys
 import pandas as pd
-import socket
-
-print(os.getenv("DB_HOST"), os.getenv("DB_USER"),os.getenv("DB_PASS"))
-print(socket.gethostbyname(socket.gethostname()))
+import yaml
 
 
 def connect2bd():
-    return clickhouse_connect.get_client(host=os.getenv("DB_HOST"),
-                                         username=os.getenv("DB_USER"), 
-                                         password=os.getenv("DB_PASS"))
+    with open(os.path.join(os.getcwd(),'secrets','secrets.yml'), 'r') as file:
+        yml = yaml.safe_load(file)
+    yml = [item.split(' ') for item in yml.split('=')]
+    return clickhouse_connect.get_client(host=yml[3][1],
+                                         username=yml[2][1], 
+                                         password=yml[1][1])
 
 
 def check_clear_db(client):
