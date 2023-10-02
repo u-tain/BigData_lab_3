@@ -15,7 +15,7 @@ jobs:
       - name: create file with password
         uses: mobiledevops/secret-to-file-action@v1
         with:
-          base64-encoded-secret: ${{ secrets.PASS_FOR_ANSIBLE }}
+          base64-encoded-secret: ${{ secrets.ANSIBLE_PASS}}
           filename: ".vault_pass"
           is-executable: true
           working-directory: "./secrets"
