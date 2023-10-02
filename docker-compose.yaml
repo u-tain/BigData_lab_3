@@ -8,13 +8,13 @@ services:
       - "8123:8123"
     networks:
       customnetwork:
-        ipv4_address: 172.25.0.2
+        ipv4_address: ${ip_db}
     ulimits:
       nofile: 262144
     environment:
-      CLICKHOUSE_DB: default
-      CLICKHOUSE_USER:  utain 
-      CLICKHOUSE_PASSWORD: 3244
+      CLICKHOUSE_DB: ${name_db}
+      CLICKHOUSE_USER: ${user} 
+      CLICKHOUSE_PASSWORD: ${pass}
       DEFAULT_SESSION_TIMEOUT: 120
     volumes:
       - ./database/config.xml:/etc/config.xml
@@ -36,4 +36,4 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.25.0.0/16
+        - subnet: ${ip_net}
