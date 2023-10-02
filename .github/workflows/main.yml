@@ -12,6 +12,13 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v3.1.0
+      - name: create file with password
+        uses: mobiledevops/secret-to-file-action@v1
+        with:
+          base64-encoded-secret: ${{ secrets.PASS_FOR_ANSIBLE }}
+          filename: ".vault_pass"
+          is-executable: true
+          working-directory: "./secrets"
       -
         name: Login to Docker Hub
         uses: docker/login-action@v2
